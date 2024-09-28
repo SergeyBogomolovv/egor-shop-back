@@ -3,21 +3,36 @@ import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { User } from './users/entities/user.entity';
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UserGuard } from './auth/guards/user.guard';
+import { AdminGuard } from './auth/guards/admin.guard';
 
 @Module({
   imports: [
-    AuthModule,
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'Bogomolov980',
-      database: 'nude',
-      entities: [User],
-      synchronize: true,
+    ConfigModule.forRoot({ isGlobal: true }),
+    JwtModule.register({
+      secret: 'secret', // TODO
+      signOptions: { expiresIn: '1d' },
+      global: true,
     }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get('POSTGRES_HOST'),
+        port: configService.get('POSTGRES_PORT'),
+        username: configService.get('POSTGERS_USER'),
+        password: configService.get('POSTGRES_PASSWORD'),
+        database: configService.get('POSTGRES_DB'),
+        entities: [User],
+        synchronize: true,
+      }),
+    }),
+    AuthModule,
     UsersModule,
   ],
+  providers: [UserGuard, AdminGuard],
 })
 export class AppModule {}

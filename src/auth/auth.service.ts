@@ -8,6 +8,7 @@ import { hash, compare, genSalt } from 'bcrypt';
 import { RegistrationDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
+import { UserRole } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -28,7 +29,7 @@ export class AuthService {
     await this.usersService.create({
       name: dto.name,
       password: hashedPassword,
-      role: dto.role,
+      role: UserRole.USER,
     });
 
     return { message: 'Пользователь зарегистрирован' };

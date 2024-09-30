@@ -7,8 +7,10 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserGuard } from './auth/guards/user.guard';
 import { AdminGuard } from './auth/guards/admin.guard';
-import { TicketsModule } from './tickets/tickets.module';
-import { Ticket } from './tickets/entities/ticket.entity';
+import { PollsModule } from './polls/polls.module';
+import { Poll } from './polls/entities/poll.entity';
+import { AnswersModule } from './answers/answers.module';
+import { Answer } from './answers/entities/answer.entity';
 
 @Module({
   imports: [
@@ -28,13 +30,14 @@ import { Ticket } from './tickets/entities/ticket.entity';
         username: configService.get('POSTGERS_USER'),
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DB'),
-        entities: [User, Ticket],
+        entities: [User, Poll, Answer],
         synchronize: true,
       }),
     }),
     AuthModule,
     UsersModule,
-    TicketsModule,
+    PollsModule,
+    AnswersModule,
   ],
   providers: [UserGuard, AdminGuard],
 })

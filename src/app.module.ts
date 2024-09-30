@@ -7,12 +7,14 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserGuard } from './auth/guards/user.guard';
 import { AdminGuard } from './auth/guards/admin.guard';
+import { TicketsModule } from './tickets/tickets.module';
+import { Ticket } from './tickets/entities/ticket.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     JwtModule.register({
-      secret: 'secret', // TODO
+      secret: 'secret',
       signOptions: { expiresIn: '1d' },
       global: true,
     }),
@@ -26,12 +28,13 @@ import { AdminGuard } from './auth/guards/admin.guard';
         username: configService.get('POSTGERS_USER'),
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DB'),
-        entities: [User],
+        entities: [User, Ticket],
         synchronize: true,
       }),
     }),
     AuthModule,
     UsersModule,
+    TicketsModule,
   ],
   providers: [UserGuard, AdminGuard],
 })

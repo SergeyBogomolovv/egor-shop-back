@@ -1,4 +1,4 @@
 export class CreatePollDto {
   title: string;
-  question: string;
+  questions: { question: string }[];
 }

@@ -10,7 +10,24 @@ export class PollsService {
     @InjectRepository(Poll) private pollsRepository: Repository<Poll>,
   ) {}
   create(dto: CreatePollDto) {
-    return this.pollsRepository.save(this.pollsRepository.create(dto));
+    console.log(dto);
+    const poll = this.pollsRepository.create({
+      title: dto.title,
+      question1: dto.questions[0].question,
+    });
+
+    if (dto.questions.length > 1) {
+      poll.question2 = dto.questions[1].question;
+    }
+
+    if (dto.questions.length > 2) {
+      poll.question3 = dto.questions[2].question;
+    }
+
+    if (dto.questions.length > 3) {
+      poll.question4 = dto.questions[3].question;
+    }
+    return this.pollsRepository.save(poll);
   }
 
   findAll() {

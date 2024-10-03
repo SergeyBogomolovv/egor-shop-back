@@ -1,4 +1,5 @@
 import { Poll } from 'src/polls/entities/poll.entity';
+import { User } from 'src/users/entities/user.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 @Entity()
@@ -7,11 +8,26 @@ export class Answer {
   id: string;
 
   @Column()
-  answer: string;
+  answer1: string;
 
-  @ManyToOne(() => Poll, (poll) => poll.anwers, {
+  @Column({ nullable: true })
+  answer2?: string;
+
+  @Column({ nullable: true })
+  answer3?: string;
+
+  @Column({ nullable: true })
+  answer4?: string;
+
+  @Column()
+  email: string;
+
+  @ManyToOne(() => Poll, (poll) => poll.answers, {
     cascade: true,
     onDelete: 'CASCADE',
   })
   poll: Poll;
+
+  @ManyToOne(() => User, (user) => user.answers)
+  user: User;
 }

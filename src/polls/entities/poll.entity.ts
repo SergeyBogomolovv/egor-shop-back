@@ -10,11 +10,20 @@ export class Poll {
   title: string;
 
   @Column()
-  question: string;
+  question1: string;
+
+  @Column({ nullable: true })
+  question2?: string;
+
+  @Column({ nullable: true })
+  question3?: string;
+
+  @Column({ nullable: true })
+  question4?: string;
 
   @Column({ type: 'integer', default: 0 })
   answered: number;
 
   @OneToMany(() => Answer, (answer) => answer.poll)
-  anwers: Answer[];
+  answers: Answer[];
 }
